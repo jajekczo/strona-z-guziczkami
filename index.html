@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+    <style>
+        * {
+            font-family: sans-serif;
+            color: whitesmoke;
+        }
+        body {
+            background-color: lightgray;
+        }
+        .clock {
+            font-size: large;
+        }
+
+        .box {
+            position: absolute;
+            /*
+            width: 100px;
+            height: 100px;
+            border: 5px solid green;
+            */
+            background-color: cornflowerblue;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 22pt;
+            text-align: center;
+        }
+
+        @keyframes znikanie{
+            from {
+                opacity: 100%;
+            }
+            to {
+                opacity: 0%;
+            }
+        }
+
+        @keyframes kolorowanie {
+            from {
+                background-color: red;
+            }
+            to {
+                background-color: cornflowerblue;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <script>
+        // robi śmieci ale chuj xD
+
+        function getNextTime() {
+            let currentTime = new Date();
+            currentTime.setSeconds(currentTime.getSeconds() + 10);
+            return currentTime;
+        }
+
+        function startClock(displayElement) {
+            let timeoutTime;
+            let setAnimation;
+
+            function mainLoop() {
+                
+                if (!timeoutTime) {
+                    timeoutTime = getNextTime();
+                }
+                
+                let currentTime = new Date();
+                let offset = timeoutTime.getTime() - currentTime.getTime();
+
+                if (!setAnimation) {
+                    setAnimation = true;
+                    //displayElement.
+                    displayElement.style.setProperty('animation', `${Math.floor(offset/1000)}s kolorowanie`)
+                }
+
+                let milliseconds = offset % 1000;
+                let seconds = Math.floor(offset % (1000 * 60) / 1000);
+                // podzielić na minuty, wziąć resztę i podzielić na milisekundy
+
+
+                displayElement.textContent = ('00'+seconds).slice(-2) + ':' + 
+                    ('000' + milliseconds).slice(-3);
+
+                if (timeoutTime - currentTime > 0) {
+                    requestAnimationFrame(mainLoop);
+                } else {
+                    displayElement.textContent = '00:000';
+                    displayElement.style.setProperty('animation', '1s znikanie');
+                    const changeStyle = () => {
+                        displayElement.style.display = 'none';
+                    }
+                    setTimeout(changeStyle, 1000)
+                    
+                }
+
+
+            }
+            requestAnimationFrame(mainLoop);
+        }
+
+        function makeTimer(){
+            let elem = document.createElement('div');
+            elem.setAttribute('class', 'clock')
+            document.body.appendChild(elem);
+            startClock(elem);
+        }
+
+        function maker(event){
+            console.log(event)
+            let box = document.createElement('div');
+            box.setAttribute('class', 'box');
+            
+            document.body.appendChild(box);
+
+            box.style.left = (event.clientX - 50) + 'px';
+            box.style.top = (event.clientY - 50)+ 'px';
+
+            startClock(box);
+        }
+        // document.getElementById('start').addEventListener('click', () => makeTimer());
+        document.addEventListener('click', (event) => {maker(event)}, true);
+
+    </script>
+</body>
+
+</html>
