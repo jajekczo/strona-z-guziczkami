@@ -57,7 +57,7 @@
 
         function getNextTime() {
             let currentTime = new Date();
-            currentTime.setSeconds(currentTime.getSeconds() + 10);
+            currentTime.setSeconds(currentTime.getSeconds() + Math.floor(Math.random()*60));
             return currentTime;
         }
 
@@ -113,7 +113,7 @@
         }
 
         function maker(event){
-            console.log(event)
+            //console.log(event)
             let box = document.createElement('div');
             box.setAttribute('class', 'box');
             
